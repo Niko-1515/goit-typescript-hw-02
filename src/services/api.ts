@@ -1,4 +1,7 @@
-import axios from 'axios'; // Імпорт бібліотеки axios для HTTP запитів
+import axios from 'axios';
+
+// Інтерфейс типізації для функції запиту fetchImages (з файлу ./types)
+import { FetchImagesResponse } from './types';
 
 // Оголошуємо базову URL-адресу для запиту до API Unsplash
 const BASE_URL = 'https://api.unsplash.com/search/photos';
@@ -12,7 +15,11 @@ const API_KEY = 'rt1wEXRpq4XH4P7VeLuQEvTaPdKScpbxmgYVcssiKME';
 // - query: рядок пошукового запиту, який ввів користувач
 // - page: номер сторінки для пагінації
 // - perPage: кількість зображень на одну сторінку, за замовчуванням 12
-export const fetchImages = async (query, page, perPage = 12) => {
+export const fetchImages = async (
+  query: string, // 🔎 Рядок пошукового запиту
+  page: number, // 📄 Номер сторінки результатів
+  perPage = 12 // 🔢 Кількість зображень на сторінці (за замовчуванням 12)
+): Promise<FetchImagesResponse> => {
   // Виконуємо GET-запит до API Unsplash
   const response = await axios.get(BASE_URL, {
     // Параметри запиту: пошуковий запит, номер сторінки, кількість зображень на сторінці
@@ -26,6 +33,10 @@ export const fetchImages = async (query, page, perPage = 12) => {
 
   console.log(response);
 
-  // Повертаємо дані, отримані від API
-  return response.data;
+  return response.data; // Повертаємо дані, отримані від API
 };
+
+
+
+
+

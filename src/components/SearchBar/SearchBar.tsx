@@ -1,26 +1,34 @@
-import { useState } from 'react'; // Xук useState
-import styles from './SearchBar.module.css'; // Стилі
-import toast from 'react-hot-toast'; // Бібліотека для відображення повідомлень
+import { ChangeEvent, FormEvent, useState } from 'react';
+import styles from './SearchBar.module.css';
+import toast from 'react-hot-toast';
+
+// Інтерфейсу пропсів для компонента SearchBar
+interface SearchBarProps {
+  onSubmit: (newQuery: string) => void; // Функція-обробник пошукового запиту
+  totalResults: number; // Загальна кількість знайдених результатів
+}
 
 // Компонент SearchBar - форма пошуку
-// Приймає пропс: onSubmit (в компоненті Арр використовується в функції handleSearchSubmit)
-const SearchBar = ({ onSubmit }) => {
-  const [query, setQuery] = useState(''); // Стан для зберігання значення пошукового запиту
+// Приймає пропси:
+// onSubmit (в компоненті Арр використовується в функції handleSearchSubmit)
+// totalResults - загальна к-ть зображень за запитом
+const SearchBar = ({ onSubmit, totalResults }: SearchBarProps): JSX.Element => {
+  const [query, setQuery] = useState<string>(''); // Стан для зберігання значення пошукового запиту
 
   // Функція для обробки зміни значення в полі вводу
-  const handleInputChange = event => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value); // Оновлюємо значення запиту при кожній зміні в полі вводу
   };
 
   // Функція для обробки відправки форми
-  const handleFormSubmit = event => {
-    event.preventDefault(); // Забороняємо перезавантаженню сторінки при відправці форми
+  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     // Якщо поле вводу порожнє (пошуковий запит не введено)
     if (query.trim() === '') {
       // Виводимо повідомлення про помилку через react-hot-toast
       toast.error('Please enter a search query!');
-      return; // Завершуємо функцію, не відправляючи запит
+      return;
     }
 
     onSubmit(query); // Викликаємо функцію onSubmit, передану як пропс, і передаємо запит
@@ -28,10 +36,10 @@ const SearchBar = ({ onSubmit }) => {
   };
 
   return (
+    // Контейнер для пошукової форми
     <header className={styles.header}>
-      {/* Контейнер для пошукової форми */}
+      {/* Форма з обробником submit */}
       <form onSubmit={handleFormSubmit} className={styles.form}>
-        {/* Форма з обробником submit */}
         <input
           onChange={handleInputChange} // Обробник для зміни значення у полі вводу
           value={query} // Прив'язуємо значення запиту до стану
@@ -48,7 +56,7 @@ const SearchBar = ({ onSubmit }) => {
             xmlns="http://www.w3.org/2000/svg"
             width="20"
             height="20"
-            fill="currentColor" // // Колір іконки відповідно до кольору тексту
+            fill="currentColor"
             viewBox="0 0 16 16"
             className={styles.icon}
           >
@@ -58,6 +66,12 @@ const SearchBar = ({ onSubmit }) => {
           <span>Search</span>
         </button>
       </form>
+      {/* Відображаємо загальну кількість знайдених результатів, якщо вона більше 0 */}
+      {totalResults > 0 && (
+        <p className={styles.resultsText}>
+          Total results found: {totalResults}
+        </p>
+      )}
     </header>
   );
 };

@@ -1,4 +1,14 @@
-import styles from './ImageCard.module.css'; // Імпорт стилів
+import styles from './ImageCard.module.css';
+import { URL } from '../../services/types'; // Інтерфейс для URL (з файлу /services/types)
+
+// 'interface' для опису типу пропсів, які очікує компонент ImageCard
+interface ImageCardProps {
+  urls: URL; // Об'єкт, що містить URL-адреси зображень різних розмірів
+  alt_description?: string; // Опис зображення для атрибута alt (необов'язковий)
+  likes: number; // Кількість вподобань
+  description?: string; // Опис зображення (необов'язковий)
+  onImageClick: (regular: string) => void; // Функція, що викликається при кліку на зображення
+}
 
 // Компонент ImageCard
 // Відповідає за відображення окремої картки зображення
@@ -8,8 +18,8 @@ const ImageCard = ({
   likes, // Кількість вподобань
   description, // Опис зображення
   onImageClick, // Колбек-функція для обробки кліків по зображенню.
-}) => {
-  // Деструктуризація URL-адрес для зображень
+}: ImageCardProps): JSX.Element => {
+  // Деструктуризація об'єкта urls, отримуємо URL маленької та великої версії зображення
   const { small, regular } = urls;
 
   // Обробник кліку, який викликає onImageClick, передаючи URL великої версії зображення (regular), що відкривається в модальному вікні
